@@ -15,6 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	ATowerBase();
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
+	UStaticMeshComponent* TowerBase;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
+	UStaticMeshComponent* TowerTop;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
