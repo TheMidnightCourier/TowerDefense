@@ -9,6 +9,7 @@
 
 class ATrackLine;
 class USplineComponent;
+class UCapsuleComponent;
 
 UCLASS()
 class TOWERDEFENSE_API AEnemyBase : public AActor
@@ -24,6 +25,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	// VARIABLES
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Component)
+	UCapsuleComponent* CapsuleCollision;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Component)
 	USkeletalMeshComponent* Mesh;
 

@@ -4,6 +4,7 @@
 #include "EnemyBase.h"
 #include "TrackLine.h"
 #include "Components/SplineComponent.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 AEnemyBase::AEnemyBase()
@@ -11,8 +12,11 @@ AEnemyBase::AEnemyBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>("Capsule Collision");
+	CapsuleCollision->SetupAttachment(RootComponent);
+
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
-	//Mesh->SetupAttachment(RootComponent);
+	Mesh->SetupAttachment(CapsuleCollision);
 
 	MovementSpeed = 100.f;
 }
@@ -49,7 +53,8 @@ void AEnemyBase::MoveAlongTheLine(float Value)
 {
 	float Distance = FMath::Lerp(0.f, Path->GetSplineLength(), Value);
 	FVector LocationAlongSpline = Path->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
+	FVector NewLocation = LocationAlongSpline + FVector(0,0,CapsuleCollision->GetScaledCapsuleHalfHeight());
 	FRotator RotationAlongSpline = Path->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 
-	SetActorLocationAndRotation(LocationAlongSpline, RotationAlongSpline);
+	SetActorLocationAndRotation(NewLocation, RotationAlongSpline);
 }

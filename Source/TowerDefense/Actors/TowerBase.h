@@ -6,25 +6,46 @@
 #include "GameFramework/Actor.h"
 #include "TowerBase.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class TOWERDEFENSE_API ATowerBase : public AActor
 {
 	GENERATED_BODY()
 	
+	FTimerHandle ShootTimeHandle;
+	float ShootRate;
+
+	void FindTarget();
+
+	UFUNCTION()
+	void OnEnemyEnterShootRange(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
+
+	UFUNCTION()
+	void OnEnemyOutOfShootRangeOrDied(AActor* OverlappedActor, AActor* OtherActor);
+	
 public:	
 	// Sets default values for this actor's properties
 	ATowerBase();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot)
+	AActor* ShootTarget;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
 	UStaticMeshComponent* TowerBase;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
 	UStaticMeshComponent* TowerTop;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
+	USphereComponent* ShootRange;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void Shoot(AActor* NewTarget);
+
+	virtual void ShootHandle();
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
