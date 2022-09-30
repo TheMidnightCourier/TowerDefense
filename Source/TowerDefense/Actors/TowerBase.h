@@ -12,9 +12,6 @@ UCLASS()
 class TOWERDEFENSE_API ATowerBase : public AActor
 {
 	GENERATED_BODY()
-	
-	FTimerHandle ShootTimeHandle;
-	float ShootRate;
 
 	void FindTarget();
 
@@ -30,6 +27,15 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot)
 	AActor* ShootTarget;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Shoot)
+	float ShootRate;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Shoot)
+	USceneComponent* ShootLocation;
+
+	FTimerHandle ShootTimeHandle;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
 	UStaticMeshComponent* TowerBase;
 
@@ -38,14 +44,16 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)
 	USphereComponent* ShootRange;
-
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void Shoot(AActor* NewTarget);
+	virtual void Shoot();
 
 	virtual void ShootHandle();
+
+	
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

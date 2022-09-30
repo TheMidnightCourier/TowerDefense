@@ -12,6 +12,11 @@ ATowerBase::ATowerBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	if (!RootComponent)
+	{
+		RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("TowerSceneComponent"));
+	}
+
 	ShootRange = CreateDefaultSubobject<USphereComponent>("Shoot Range");
 	ShootRange->SetupAttachment(RootComponent);
 	ShootRange->OnComponentBeginOverlap.AddDynamic(this, &ATowerBase::OnEnemyEnterShootRange);
@@ -24,6 +29,9 @@ ATowerBase::ATowerBase()
 	TowerTop = CreateDefaultSubobject<UStaticMeshComponent>("Tower Top");
 	TowerTop->SetupAttachment(TowerBase);
 	TowerTop->SetGenerateOverlapEvents(false);
+
+	ShootLocation = CreateDefaultSubobject<USceneComponent>(TEXT("ShootLocation"));
+	ShootLocation->SetupAttachment(TowerTop);
 	
 	ShootRate = 1.f;
 }
@@ -42,7 +50,7 @@ void ATowerBase::Tick(float DeltaTime)
 
 }
 
-void ATowerBase::Shoot(AActor* NewTarget)
+void ATowerBase::Shoot()
 {
 	D("Shoot!");
 	GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerBase::ShootHandle, ShootRate, true);
@@ -63,7 +71,7 @@ void ATowerBase::FindTarget()
 	if (!TargetsInRange.IsEmpty())
 	{
 		 ShootTarget = TargetsInRange[0];
-		 Shoot(ShootTarget);
+		 Shoot();
 		 DEBUGMESSAGE("%s - Shoot Target", *(ShootTarget->GetName()));
 	}
 	else D("There is no enemy in shoot range");
