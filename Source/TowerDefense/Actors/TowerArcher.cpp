@@ -11,7 +11,7 @@ ATowerArcher::ATowerArcher()
 
 void ATowerArcher::Shoot()
 {
-    GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerArcher::ShootHandle, ShootRate, true);
+    GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerArcher::ShootHandle, ShootRate, true, 0.0f);
 }
 
 void ATowerArcher::ShootHandle()
@@ -27,7 +27,7 @@ void ATowerArcher::ShootHandle()
             SpawnParams.Owner = this;
             SpawnParams.Instigator = GetInstigator();
 
-            AProjectileBase* Projectile = World->SpawnActor<AProjectileBase>(ProjectileClass, ShootLocation->GetRelativeLocation(), TowerTop->GetComponentRotation(), SpawnParams);
+            AProjectileBase* Projectile = World->SpawnActor<AProjectileBase>(ProjectileClass, ShootLocation->GetComponentLocation(), TowerTop->GetComponentRotation(), SpawnParams);
             DEBUGMESSAGE("Shoot Locatoin = %s", *ShootLocation->GetComponentLocation().ToString());
             if (Projectile)
             {

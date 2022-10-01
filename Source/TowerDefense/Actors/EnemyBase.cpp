@@ -58,3 +58,11 @@ void AEnemyBase::MoveAlongTheLine(float Value)
 
 	SetActorLocationAndRotation(NewLocation, RotationAlongSpline);
 }
+
+FVector AEnemyBase::GetLocationAfterTime(float Time)
+{
+	float Seconds = Path->GetSplineLength()/MovementSpeed;
+	DEBUGMESSAGE("Seconds played = %f", MoveTimeline.GetPlaybackPosition());
+	float Distance = Time / Seconds * Path->GetSplineLength() + MoveTimeline.GetPlaybackPosition() * Seconds * MovementSpeed;
+	return Path->GetLocationAtDistanceAlongSpline(Distance*0.75f, ESplineCoordinateSpace::Type::World);
+}

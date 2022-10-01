@@ -2,7 +2,7 @@
 
 #include "ProjectileBase.h"
 #include "EnemyBase.h"
-#include "Components/SphereComponent.h"
+
 
 // Sets default values
 AProjectileBase::AProjectileBase()

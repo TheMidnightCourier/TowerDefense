@@ -4,18 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "TowerBase.h"
-#include "ProjectileBase.h"
-#include "TowerArcher.generated.h"
+#include "ProjectileBomb.h"
+#include "TowerBomber.generated.h"
 
+/**
+ * 
+ */
 UCLASS()
-class TOWERDEFENSE_API ATowerArcher : public ATowerBase
+class TOWERDEFENSE_API ATowerBomber : public ATowerBase
 {
 	GENERATED_BODY()
 public:
-	ATowerArcher();
-
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-	TSubclassOf<class AProjectileBase> ProjectileClass;
+	TSubclassOf<class AProjectileBomb> ProjectileClass;
 protected:
 	void Shoot() override;
 	void ShootHandle() override;

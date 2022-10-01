@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "EnemyBase.h"
 #include "TowerBase.generated.h"
 
 class USphereComponent;
@@ -33,6 +34,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Shoot)
 	USceneComponent* ShootLocation;
+
+	UPROPERTY(EditDefaultsOnly, Category = Shoot)
+	TSubclassOf<class AEnemyBase> EnemyClass;
 
 	FTimerHandle ShootTimeHandle;
 

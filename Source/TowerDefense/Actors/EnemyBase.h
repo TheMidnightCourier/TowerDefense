@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/TimelineComponent.h"
+#include "TowerDefense/macros.h"
 #include "EnemyBase.generated.h"
 
 class ATrackLine;
@@ -41,6 +42,7 @@ protected:
 	// FUNCTIONS
 	UFUNCTION()
 	virtual void MoveAlongTheLine(float Value);
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -51,5 +53,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = Timeline)
 	float MovementSpeed;
+
+	UFUNCTION()
+	FVector GetLocationAfterTime(float Time);
 
 };

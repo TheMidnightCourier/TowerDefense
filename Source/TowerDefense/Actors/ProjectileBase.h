@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/SphereComponent.h"
+#include "TowerDefense/macros.h"
 #include "ProjectileBase.generated.h"
 
 class USphereComponent;

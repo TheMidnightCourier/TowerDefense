@@ -65,14 +65,16 @@ void ATowerBase::ShootHandle()
 
 void ATowerBase::FindTarget()
 {
+	if (!EnemyClass) return;
+
 	GetWorldTimerManager().ClearTimer(ShootTimeHandle);
 	TArray<AActor*> TargetsInRange;
-	ShootRange->GetOverlappingActors(TargetsInRange);
+	ShootRange->GetOverlappingActors(TargetsInRange, EnemyClass);
 	if (!TargetsInRange.IsEmpty())
 	{
-		 ShootTarget = TargetsInRange[0];
-		 Shoot();
-		 DEBUGMESSAGE("%s - Shoot Target", *(ShootTarget->GetName()));
+		ShootTarget = TargetsInRange[0];
+		Shoot();
+		DEBUGMESSAGE("%s - Shoot Target", *(ShootTarget->GetName()));
 	}
 	else D("There is no enemy in shoot range");
 }
