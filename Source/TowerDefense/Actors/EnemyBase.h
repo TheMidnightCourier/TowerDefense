@@ -17,10 +17,17 @@ class TOWERDEFENSE_API AEnemyBase : public AActor
 {
 	GENERATED_BODY()
 
+	UFUNCTION()
+	virtual void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+
 public:	
 	// Sets default values for this actor's properties
 	AEnemyBase();
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
+	float Health;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Health)
+	float DefaultHealth;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -56,5 +63,14 @@ public:
 
 	UFUNCTION()
 	FVector GetLocationAfterTime(float Time);
+
+	UFUNCTION(BlueprintCallable)
+	void SetTrackLine(AActor* Track);
+
+	UFUNCTION(BlueprintCallable)
+	void SetAlphaCurve(UCurveFloat* Curve);
+
+	UFUNCTION(BlueprintCallable)
+	void StartRunning();
 
 };

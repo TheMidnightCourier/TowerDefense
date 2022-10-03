@@ -35,7 +35,9 @@ void ATowerBomber::ShootHandle()
         DrawDebugLine(GetWorld(), ShootLocation->GetComponentLocation(), HeightPoint, FColor::Red, true, -1, 0, 1);
         
         FVector LaunchDirection = HeightPoint - ShootLocation->GetComponentLocation();
-        LaunchDirection *= 0.75f;
+        LaunchDirection.Z *= 1.5;
+        LaunchDirection.X /= 2.5;
+        LaunchDirection.Y /= 2.5;
         Projectile->FireInDirection(LaunchDirection);
     }
 }

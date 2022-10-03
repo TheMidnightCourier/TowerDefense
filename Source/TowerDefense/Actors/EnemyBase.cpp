@@ -18,27 +18,18 @@ AEnemyBase::AEnemyBase()
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	Mesh->SetupAttachment(CapsuleCollision);
 
-	MovementSpeed = 100.f;
+	MovementSpeed = 300.f;
+
+	DefaultHealth = 100.f;
+	Health = DefaultHealth;
 }
 
 // Called when the game starts or when spawned
 void AEnemyBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (AlphaCurveFloat && TrackLine)
-    {
-		Path = TrackLine->PathLine;
-		float Seconds = Path->GetSplineLength()/MovementSpeed;
-		if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Seconds to walk all path = %f"), Seconds));
 
-        FOnTimelineFloat ProgressFunction;
-        ProgressFunction.BindUFunction(this, FName("MoveAlongTheLine"));
-
-        MoveTimeline.AddInterpFloat(AlphaCurveFloat, ProgressFunction);
-		MoveTimeline.SetPlayRate(1.f/Seconds);
-        MoveTimeline.PlayFromStart();
-    }
+	OnTakeAnyDamage.AddDynamic(this, &AEnemyBase::OnDamageTaken);
 }
 
 // Called every frame
@@ -57,6 +48,7 @@ void AEnemyBase::MoveAlongTheLine(float Value)
 	FRotator RotationAlongSpline = Path->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 
 	SetActorLocationAndRotation(NewLocation, RotationAlongSpline);
+	
 }
 
 FVector AEnemyBase::GetLocationAfterTime(float Time)
@@ -64,5 +56,50 @@ FVector AEnemyBase::GetLocationAfterTime(float Time)
 	float Seconds = Path->GetSplineLength()/MovementSpeed;
 	DEBUGMESSAGE("Seconds played = %f", MoveTimeline.GetPlaybackPosition());
 	float Distance = Time / Seconds * Path->GetSplineLength() + MoveTimeline.GetPlaybackPosition() * Seconds * MovementSpeed;
-	return Path->GetLocationAtDistanceAlongSpline(Distance*0.75f, ESplineCoordinateSpace::Type::World);
+	return Path->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
+}
+
+void AEnemyBase::SetTrackLine(AActor* Track)
+{
+	ATrackLine* Line = Cast<ATrackLine>(Track);
+	if (TrackLine || !Line) return;
+
+	TrackLine = Line;
+}
+
+void AEnemyBase::SetAlphaCurve(UCurveFloat* Curve)
+{
+	if (AlphaCurveFloat) return;
+
+	AlphaCurveFloat = Curve;
+}
+
+void AEnemyBase::StartRunning()
+{
+	if (AlphaCurveFloat && TrackLine)
+    {
+		Path = TrackLine->PathLine;
+		float Seconds = Path->GetSplineLength()/MovementSpeed;
+		if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Seconds to walk all path = %f"), Seconds));
+
+        FOnTimelineFloat ProgressFunction;
+        ProgressFunction.BindUFunction(this, FName("MoveAlongTheLine"));
+
+        MoveTimeline.AddInterpFloat(AlphaCurveFloat, ProgressFunction);
+		MoveTimeline.SetPlayRate(1.f/Seconds);
+        MoveTimeline.PlayFromStart();
+    }
+}
+
+void AEnemyBase::OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	if (Damage == 0) return;
+
+	Health -= Damage;
+	DEBUGMESSAGE("Health left = %f", Health);
+
+	if (FMath::IsNearlyZero(Health) || Health < 0)
+	{
+		this->Destroy();
+	}
 }

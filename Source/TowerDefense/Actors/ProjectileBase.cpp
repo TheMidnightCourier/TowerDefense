@@ -2,6 +2,7 @@
 
 #include "ProjectileBase.h"
 #include "EnemyBase.h"
+#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -44,6 +45,8 @@ AProjectileBase::AProjectileBase()
         ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
 		ProjectileMesh->SetupAttachment(RootComponent);
     }
+
+	CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBase::OnProjectileBeginOverlap);
 }
 
 void AProjectileBase::FireInDirection(const FVector& ShootDirection)
@@ -67,6 +70,7 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 {
 	if (Cast<AEnemyBase>(OtherActor))
 	{
+		UGameplayStatics::ApplyDamage(OtherActor, 35.f, nullptr, this, NULL);
 		this->Destroy();
 	}
 }
