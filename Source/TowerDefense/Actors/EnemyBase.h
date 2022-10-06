@@ -28,11 +28,17 @@ public:
 	float Health;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Health)
 	float DefaultHealth;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Offset)
+	float VerticalOffset = 0.f;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	// VARIABLES
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Component)
+	USceneComponent* Root;
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Component)
 	UCapsuleComponent* CapsuleCollision;
 

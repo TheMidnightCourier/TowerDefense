@@ -27,15 +27,21 @@ void ATowerArcher::ShootHandle()
             SpawnParams.Owner = this;
             SpawnParams.Instigator = GetInstigator();
 
+            UCapsuleComponent* Collision = ShootTarget->FindComponentByClass<UCapsuleComponent>();
+
+            if (!Collision) {
+                D("No collision found!");
+                return;
+            }
+
             AProjectileBase* Projectile = World->SpawnActor<AProjectileBase>(ProjectileClass, ShootLocation->GetComponentLocation(), TowerTop->GetComponentRotation(), SpawnParams);
             DEBUGMESSAGE("Shoot Locatoin = %s", *ShootLocation->GetComponentLocation().ToString());
             if (Projectile)
             {
-                FVector LaunchDirection = ShootTarget->GetActorLocation() - ShootLocation->GetComponentLocation();
+                FVector LaunchDirection = Collision->GetComponentLocation() - ShootLocation->GetComponentLocation();
                 LaunchDirection.Normalize();
                 Projectile->FireInDirection(LaunchDirection);
-                Projectile->ProjectileMovementComponent->HomingTargetComponent = ShootTarget->GetRootComponent();
-                D("Projectile Spawned");
+                Projectile->ProjectileMovementComponent->HomingTargetComponent = Collision;
             }
         }
     }

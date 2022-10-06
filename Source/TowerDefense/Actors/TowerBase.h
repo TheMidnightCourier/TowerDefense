@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/CapsuleComponent.h"
+#include "Components/SphereComponent.h"
 #include "EnemyBase.h"
 #include "TowerBase.generated.h"
 

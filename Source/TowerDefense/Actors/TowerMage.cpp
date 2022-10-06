@@ -3,6 +3,7 @@
 
 #include "TowerMage.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/GameplayStatics.h"
 
 void ATowerMage::Shoot()
 {
@@ -16,6 +17,8 @@ void ATowerMage::ShootHandle()
     UWorld* World = GetWorld();
     if (World)
     {
-        DrawDebugLine(World, ShootLocation->GetComponentLocation(), ShootTarget->GetActorLocation(), FColor::Red, true, -1, 0, 10);
+        FVector CollisionLoc = ShootTarget->FindComponentByClass<UCapsuleComponent>()->GetComponentLocation();
+        UGameplayStatics::ApplyDamage(ShootTarget, 1, NULL, this, NULL);
+        DrawDebugLine(World, ShootLocation->GetComponentLocation(), CollisionLoc, FColor::Red, true, -1, 0, 10);
     }
 }

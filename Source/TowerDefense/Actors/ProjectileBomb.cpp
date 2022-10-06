@@ -20,7 +20,6 @@ void AProjectileBomb::SetInitialSpeedByTargetDistance(FVector Location, float Sh
 
 void AProjectileBomb::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-    DEBUGMESSAGE("OtherActor = %s", *OtherActor->GetName());
     if (OtherActor->ActorHasTag(TEXT("Surface")))
     {
         TArray<AActor*> IgnoreList;

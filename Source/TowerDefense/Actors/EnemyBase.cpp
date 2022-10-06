@@ -12,6 +12,9 @@ AEnemyBase::AEnemyBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	Root = CreateDefaultSubobject<USceneComponent>("Root");
+	RootComponent = Root;
+
 	CapsuleCollision = CreateDefaultSubobject<UCapsuleComponent>("Capsule Collision");
 	CapsuleCollision->SetupAttachment(RootComponent);
 
@@ -42,12 +45,12 @@ void AEnemyBase::Tick(float DeltaTime)
 
 void AEnemyBase::MoveAlongTheLine(float Value)
 {
-	float Distance = FMath::Lerp(0.f, Path->GetSplineLength(), Value);
+	float Distance = FMath::Lerp(VerticalOffset, Path->GetSplineLength(), Value);
 	FVector LocationAlongSpline = Path->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
-	FVector NewLocation = LocationAlongSpline + FVector(0,0,CapsuleCollision->GetScaledCapsuleHalfHeight());
+	//FVector NewLocation = LocationAlongSpline + FVector(0,0,0);
 	FRotator RotationAlongSpline = Path->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 
-	SetActorLocationAndRotation(NewLocation, RotationAlongSpline);
+	SetActorLocationAndRotation(LocationAlongSpline, RotationAlongSpline);
 	
 }
 

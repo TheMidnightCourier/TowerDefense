@@ -2,7 +2,6 @@
 
 
 #include "TowerBase.h"
-#include "Components/SphereComponent.h"
 #include "TowerDefense/macros.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -34,6 +33,8 @@ ATowerBase::ATowerBase()
 	ShootLocation->SetupAttachment(TowerTop);
 	
 	ShootRate = 1.f;
+
+	
 }
 
 // Called when the game starts or when spawned
@@ -58,7 +59,10 @@ void ATowerBase::Shoot()
 
 void ATowerBase::ShootHandle()
 {
-	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(TowerTop->GetComponentLocation(), ShootTarget->GetActorLocation());
+	if (!ShootTarget->FindComponentByClass<UCapsuleComponent>()) return;
+	FVector Loc = ShootTarget->FindComponentByClass<UCapsuleComponent>()->GetComponentLocation();
+	DEBUGMESSAGE("Collision location = %s", *Loc.ToString());
+	FRotator NewRotation = UKismetMathLibrary::FindLookAtRotation(TowerTop->GetComponentLocation(), Loc);
 	NewRotation = FRotator(0, NewRotation.Yaw, 0);
 	TowerTop->SetWorldRotation(NewRotation);
 }
@@ -67,7 +71,6 @@ void ATowerBase::FindTarget()
 {
 	if (!EnemyClass) return;
 
-	GetWorldTimerManager().ClearTimer(ShootTimeHandle);
 	TArray<AActor*> TargetsInRange;
 	ShootRange->GetOverlappingActors(TargetsInRange, EnemyClass);
 	if (!TargetsInRange.IsEmpty())
@@ -76,17 +79,23 @@ void ATowerBase::FindTarget()
 		Shoot();
 		DEBUGMESSAGE("%s - Shoot Target", *(ShootTarget->GetName()));
 	}
-	else D("There is no enemy in shoot range");
+	else
+	{
+		D("There is no enemy in shoot range");
+		GetWorldTimerManager().ClearTimer(ShootTimeHandle);
+	} 
 }
 
 void ATowerBase::OnEnemyEnterShootRange(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+	if (!Cast<AEnemyBase>(OtherActor)) return;
 	DEBUGMESSAGE("%s - in shoot range", *(OtherActor->GetName()));
-	if(!ShootTarget) FindTarget();
+	if(!IsValid(ShootTarget)) FindTarget();
 }
 
 void ATowerBase::OnEnemyOutOfShootRangeOrDied(AActor* OverlappedActor, AActor* OtherActor)
 {
+	if (!Cast<AEnemyBase>(OtherActor)) return;
 	DEBUGMESSAGE("%s - is out of range or died", *(OtherActor->GetName()));
-	if(ShootTarget == OtherActor) FindTarget();
+	if(IsValid(ShootTarget) && ShootTarget == OtherActor) FindTarget();
 }
