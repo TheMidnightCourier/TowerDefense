@@ -40,6 +40,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = Shoot)
 	TSubclassOf<class AEnemyBase> EnemyClass;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot)
+	bool bCanShoot;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
+	float Damage;
+
 	FTimerHandle ShootTimeHandle;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Component)

@@ -2,12 +2,18 @@
 
 #include "TowerBomber.h"
 #include "DrawDebugHelpers.h"
+#include "Kismet/KismetMathLibrary.h"
 #define cos45 sqrt(2) / 2
 
 void ATowerBomber::Shoot()
 {
     if (!ProjectileClass)
         return;
+    if (GetWorldTimerManager().IsTimerActive(ShootTimeHandle) && GetWorldTimerManager().GetTimerElapsed(ShootTimeHandle) != -1)
+	{
+		D("CD is on");
+		return;
+	}
     GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerBomber::ShootHandle, ShootRate, true, 0.0f);
 }
 
@@ -38,6 +44,11 @@ void ATowerBomber::ShootHandle()
         LaunchDirection.Z *= 1.5;
         LaunchDirection.X /= 2.5;
         LaunchDirection.Y /= 2.5;
+        TowerTop->SetWorldRotation(UKismetMathLibrary::FindLookAtRotation(TowerTop->GetComponentLocation(), HeightPoint));\
+        Projectile->SetActorLocation(ShootLocation->GetComponentLocation());
+
+        Projectile->Damage = Damage;
         Projectile->FireInDirection(LaunchDirection);
+
     }
 }

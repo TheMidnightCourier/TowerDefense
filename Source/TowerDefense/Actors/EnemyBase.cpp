@@ -24,7 +24,6 @@ AEnemyBase::AEnemyBase()
 	MovementSpeed = 300.f;
 
 	DefaultHealth = 100.f;
-	Health = DefaultHealth;
 }
 
 // Called when the game starts or when spawned
@@ -33,6 +32,7 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 
 	OnTakeAnyDamage.AddDynamic(this, &AEnemyBase::OnDamageTaken);
+	Health = DefaultHealth;
 }
 
 // Called every frame

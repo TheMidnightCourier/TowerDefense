@@ -33,6 +33,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	UStaticMeshComponent* ProjectileMesh;
 
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Shoot)
+	float Damage;
+
 	void FireInDirection(const FVector& ShootDirection);
 
 protected:

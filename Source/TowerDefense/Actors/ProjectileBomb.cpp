@@ -23,7 +23,7 @@ void AProjectileBomb::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
     if (OtherActor->ActorHasTag(TEXT("Surface")))
     {
         TArray<AActor*> IgnoreList;
-        UGameplayStatics::ApplyRadialDamage(GetWorld(), 55.f, SweepResult.Location, 300.f, NULL, IgnoreList, NULL, NULL, true);
+        UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, SweepResult.Location, 300.f, NULL, IgnoreList, NULL, NULL, true);
         DrawDebugSphere(GetWorld(), SweepResult.Location, 300.f, 12, FColor::Yellow, true, 3.f, 0, 1);
         this->Destroy();
     }

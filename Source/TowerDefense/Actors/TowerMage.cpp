@@ -18,7 +18,7 @@ void ATowerMage::ShootHandle()
     if (World)
     {
         FVector CollisionLoc = ShootTarget->FindComponentByClass<UCapsuleComponent>()->GetComponentLocation();
-        UGameplayStatics::ApplyDamage(ShootTarget, 1, NULL, this, NULL);
-        DrawDebugLine(World, ShootLocation->GetComponentLocation(), CollisionLoc, FColor::Red, true, -1, 0, 10);
+        UGameplayStatics::ApplyDamage(ShootTarget, Damage, NULL, this, NULL);
+        DrawDebugLine(World, ShootLocation->GetComponentLocation(), CollisionLoc, FColor::Red, true, .1f, 0, 10);
     }
 }

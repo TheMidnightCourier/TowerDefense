@@ -70,7 +70,7 @@ void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
 {
 	if (Cast<AEnemyBase>(OtherActor))
 	{
-		UGameplayStatics::ApplyDamage(OtherActor, 35.f, nullptr, this, NULL);
+		UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, this, NULL);
 		this->Destroy();
 	}
 }

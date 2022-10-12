@@ -11,6 +11,11 @@ ATowerArcher::ATowerArcher()
 
 void ATowerArcher::Shoot()
 {
+    if (GetWorldTimerManager().IsTimerActive(ShootTimeHandle) && GetWorldTimerManager().GetTimerElapsed(ShootTimeHandle) != -1)
+	{
+		D("CD is on");
+		return;
+	}
     GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerArcher::ShootHandle, ShootRate, true, 0.0f);
 }
 
@@ -18,7 +23,9 @@ void ATowerArcher::ShootHandle()
 {
     ATowerBase::ShootHandle();
 
-    if (ProjectileClass)
+    if (!ShootTarget) D("No ShootTarget Found!");
+
+    if (ProjectileClass && ShootTarget)
     {
         UWorld *World = GetWorld();
         if (World)
@@ -42,8 +49,8 @@ void ATowerArcher::ShootHandle()
                 LaunchDirection.Normalize();
                 Projectile->FireInDirection(LaunchDirection);
                 Projectile->ProjectileMovementComponent->HomingTargetComponent = Collision;
+                Projectile->Damage = Damage;
             }
         }
-    }
-    else D("No ProjectileClass");
+    }  
 }
