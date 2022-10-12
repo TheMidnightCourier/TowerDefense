@@ -48,6 +48,7 @@ void AEnemyBase::MoveAlongTheLine(float Value)
 	float Distance = FMath::Lerp(VerticalOffset, Path->GetSplineLength(), Value);
 	FVector LocationAlongSpline = Path->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 	//FVector NewLocation = LocationAlongSpline + FVector(0,0,0);
+	//DEBUGMESSAGE("NewLoc = %s", *LocationAlongSpline.ToString());
 	FRotator RotationAlongSpline = Path->GetRotationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 
 	SetActorLocationAndRotation(LocationAlongSpline, RotationAlongSpline);
