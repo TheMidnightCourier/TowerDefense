@@ -4,7 +4,6 @@
 #include "EnemyBase.h"
 #include "Kismet/GameplayStatics.h"
 
-
 // Sets default values
 AProjectileBase::AProjectileBase()
 {
@@ -68,8 +67,10 @@ void AProjectileBase::Tick(float DeltaTime)
 
 void AProjectileBase::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	if (Cast<AEnemyBase>(OtherActor))
+	AEnemyBase* Enemy = Cast<AEnemyBase>(OtherActor);
+	if (Enemy)
 	{
+		Enemy->OnFire = FireDamage;
 		UGameplayStatics::ApplyDamage(OtherActor, Damage, nullptr, this, NULL);
 		this->Destroy();
 	}

@@ -31,7 +31,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Shoot)
 	AActor* ShootTarget;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Shoot)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
 	float ShootRate;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Shoot)
@@ -44,7 +44,16 @@ public:
 	bool bCanShoot;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
+	float DefaultDamage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
 	float Damage;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
+	float DamageMultiplier = 1.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Shoot)
+	float HasteMultiplier = 1.f;
 
 	FTimerHandle ShootTimeHandle;
 

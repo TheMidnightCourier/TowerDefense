@@ -13,7 +13,6 @@ void ATowerArcher::Shoot()
 {
     if (GetWorldTimerManager().IsTimerActive(ShootTimeHandle) && GetWorldTimerManager().GetTimerElapsed(ShootTimeHandle) != -1)
 	{
-		D("CD is on");
 		return;
 	}
     GetWorldTimerManager().SetTimer(ShootTimeHandle, this, &ATowerArcher::ShootHandle, ShootRate, true, 0.0f);
@@ -22,8 +21,6 @@ void ATowerArcher::Shoot()
 void ATowerArcher::ShootHandle()
 {
     ATowerBase::ShootHandle();
-
-    if (!ShootTarget) D("No ShootTarget Found!");
 
     if (ProjectileClass && ShootTarget)
     {
@@ -37,12 +34,11 @@ void ATowerArcher::ShootHandle()
             UCapsuleComponent* Collision = ShootTarget->FindComponentByClass<UCapsuleComponent>();
 
             if (!Collision) {
-                D("No collision found!");
                 return;
             }
 
             AProjectileBase* Projectile = World->SpawnActor<AProjectileBase>(ProjectileClass, ShootLocation->GetComponentLocation(), TowerTop->GetComponentRotation(), SpawnParams);
-            DEBUGMESSAGE("Shoot Locatoin = %s", *ShootLocation->GetComponentLocation().ToString());
+            
             if (Projectile)
             {
                 FVector LaunchDirection = Collision->GetComponentLocation() - ShootLocation->GetComponentLocation();
@@ -50,6 +46,7 @@ void ATowerArcher::ShootHandle()
                 Projectile->FireInDirection(LaunchDirection);
                 Projectile->ProjectileMovementComponent->HomingTargetComponent = Collision;
                 Projectile->Damage = Damage;
+                Projectile->FireDamage = HasFireDamage;
             }
         }
     }  

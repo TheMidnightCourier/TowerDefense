@@ -34,6 +34,8 @@ ATowerBase::ATowerBase()
 	bCanShoot = true;
 
 	ShootRate = 1.f;
+
+	Damage = DefaultDamage;
 }
 
 // Called when the game starts or when spawned
@@ -103,6 +105,11 @@ void ATowerBase::OnEnemyOutOfShootRangeOrDied(AActor *OverlappedActor, AActor *O
 	if (!Cast<AEnemyBase>(OtherActor))
 		return;
 	DEBUGMESSAGE("%s - is out of range or died", *(OtherActor->GetName()));
+
+	AEnemyBase* Enemy = Cast<AEnemyBase>(ShootTarget);
+	Enemy->MovementSpeed = Enemy->DefaultMovementSpeed;
+	Enemy->SetNewSpeed();
+
 	if (IsValid(ShootTarget) && ShootTarget == OtherActor)
 	{
 		FindTarget();

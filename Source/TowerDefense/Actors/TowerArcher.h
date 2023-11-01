@@ -16,6 +16,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
 	TSubclassOf<class AProjectileBase> ProjectileClass;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Shoot)
+	bool HasFireDamage;
 protected:
 	void Shoot() override;
 	void ShootHandle() override;

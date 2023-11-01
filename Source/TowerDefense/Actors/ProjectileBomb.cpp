@@ -7,8 +7,7 @@ AProjectileBomb::AProjectileBomb()
 {
     ProjectileMovementComponent->bRotationFollowsVelocity = true;
     ProjectileMovementComponent->bShouldBounce = false;
-    ProjectileMovementComponent->ProjectileGravityScale = 1.0f;
-    CollisionComponent->OnComponentBeginOverlap.AddDynamic(this, &AProjectileBomb::OnProjectileBeginOverlap);
+    ProjectileMovementComponent->ProjectileGravityScale = 1.0f;   
 }
 
 void AProjectileBomb::SetInitialSpeedByTargetDistance(FVector Location, float ShootRate)
@@ -24,7 +23,7 @@ void AProjectileBomb::OnProjectileBeginOverlap(UPrimitiveComponent* OverlappedCo
     {
         TArray<AActor*> IgnoreList;
         UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, SweepResult.Location, 300.f, NULL, IgnoreList, NULL, NULL, true);
-        DrawDebugSphere(GetWorld(), SweepResult.Location, 300.f, 12, FColor::Yellow, true, 3.f, 0, 1);
+        DrawDebugSphere(GetWorld(), SweepResult.Location, 300.f, 12, FColor::Yellow, false, 3, 0, 1);
         this->Destroy();
     }
 }

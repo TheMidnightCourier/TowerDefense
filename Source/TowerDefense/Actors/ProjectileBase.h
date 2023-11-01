@@ -30,11 +30,14 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh)
 	UStaticMeshComponent* ProjectileMesh;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Shoot)
 	float Damage;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Shoot)
+	bool FireDamage;
 
 	void FireInDirection(const FVector& ShootDirection);
 

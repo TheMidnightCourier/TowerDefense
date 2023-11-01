@@ -24,13 +24,19 @@ public:
 	// Sets default values for this actor's properties
 	AEnemyBase();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Health)
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Health)
 	float Health;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Health)
 	float DefaultHealth;
 
 	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Offset)
 	float VerticalOffset = 0.f;
+
+	FTimeline MoveTimeline;
+
+	UPROPERTY(EditInstanceOnly, BlueprintReadWrite, Category = Health)
+	bool OnFire = false;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,8 +56,6 @@ protected:
 
 	USplineComponent* Path;
 
-    FTimeline MoveTimeline;
-
 	// FUNCTIONS
 	UFUNCTION()
 	virtual void MoveAlongTheLine(float Value);
@@ -63,6 +67,9 @@ public:
 	// VARIABLES
 	UPROPERTY(EditAnywhere, Category = Timeline)
     UCurveFloat* AlphaCurveFloat;
+
+	UPROPERTY(EditAnywhere, Category = Timeline)
+	float DefaultMovementSpeed;
 
 	UPROPERTY(EditAnywhere, Category = Timeline)
 	float MovementSpeed;
@@ -78,5 +85,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StartRunning();
+
+	void SetNewSpeed();
 
 };

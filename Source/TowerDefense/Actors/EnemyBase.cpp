@@ -21,9 +21,10 @@ AEnemyBase::AEnemyBase()
 	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>("Mesh");
 	Mesh->SetupAttachment(CapsuleCollision);
 
-	MovementSpeed = 300.f;
-
 	DefaultHealth = 100.f;
+
+	DefaultMovementSpeed = 300.f;
+	MovementSpeed = DefaultMovementSpeed;
 }
 
 // Called when the game starts or when spawned
@@ -58,8 +59,9 @@ void AEnemyBase::MoveAlongTheLine(float Value)
 FVector AEnemyBase::GetLocationAfterTime(float Time)
 {
 	float Seconds = Path->GetSplineLength()/MovementSpeed;
-	DEBUGMESSAGE("Seconds played = %f", MoveTimeline.GetPlaybackPosition());
-	float Distance = Time / Seconds * Path->GetSplineLength() + MoveTimeline.GetPlaybackPosition() * Seconds * MovementSpeed;
+	//float Distance = Time / Seconds * Path->GetSplineLength() + MoveTimeline.GetPlaybackPosition() * Seconds * MovementSpeed;
+	float Distance = (MoveTimeline.GetPlaybackPosition() + MoveTimeline.GetPlayRate() * Time) * Path->GetSplineLength();
+	DEBUGMESSAGE("MovementSpeed = %f", MovementSpeed);
 	return Path->GetLocationAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::Type::World);
 }
 
@@ -84,7 +86,6 @@ void AEnemyBase::StartRunning()
     {
 		Path = TrackLine->PathLine;
 		float Seconds = Path->GetSplineLength()/MovementSpeed;
-		if(GEngine) GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, FString::Printf(TEXT("Seconds to walk all path = %f"), Seconds));
 
         FOnTimelineFloat ProgressFunction;
         ProgressFunction.BindUFunction(this, FName("MoveAlongTheLine"));
@@ -95,12 +96,22 @@ void AEnemyBase::StartRunning()
     }
 }
 
+void AEnemyBase::SetNewSpeed()
+{
+	if (AlphaCurveFloat && TrackLine)
+    {
+		Path = TrackLine->PathLine;
+		float Seconds = Path->GetSplineLength()/MovementSpeed;
+
+		MoveTimeline.SetPlayRate(1.f/Seconds);
+    }
+}
+
 void AEnemyBase::OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
 	if (Damage == 0) return;
 
 	Health -= Damage;
-	DEBUGMESSAGE("Health left = %f", Health);
 
 	if (FMath::IsNearlyZero(Health) || Health < 0)
 	{
